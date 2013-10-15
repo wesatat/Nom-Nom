@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head> 
+	<title>My first web page</title>
+	<script src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
+	<script src="jquery.js"></script>
+	<script src="underscore.js"></script>
+	<script src="backbone.js"></script>
+	<script>Parse.initialize("NQp1bE4ACmH1UG7SApBL1AK6yMOchkp5E15piSNO", "KJOo89KECpkd8cl9tf9FaSHl5RFWl1lbqAlVwJ5V");
+	</script>
+</head>
+<body>
+	<div id="screen">
+	</div>
+	
+	<script id="LoginTemplate" type="text/template">	
+		<h1>NomNom Login Screen</h1>
+		<p>
+		Login
+		</p>
+		<form>
+			<fieldset>
+				<label>UserName:</label> <input type="text" id="username" ><br>
+				<label>Password:</label> <input type="password" id="password">
+				<input type="button" value="Login" onclick="onSubmitLoginForm" name="Login"/>
+			</fieldset>
+			
+		</form> 
+	</script>
+	<script id="Signup" type="text/template">	
+		<h1>NomNom Signup Screen</h1>
+		<p>
+		Signup
+		</p>
+		<form>
+			<fieldset>
+				<label>First Name:</label> <input type="text" id="firstname" ><br>
+				<label>Surname:</label> <input type="text" id="surname" ><br>
+				<label>UserName:</label> <input type="text" id="usernameSignup" ><br>
+				<label>Password:</label> <input type="password" id="passwordSignup"><br>
+				<label>Email:</label> <input type="text" id="email"><br>
+				<label>Verify Email:</label> <input type="text" id="verifyEmail"><br>
+				<input type="button" value="Signup" onclick="onSubmitSignupForm" name="Signup"/>
+			</fieldset>
+			
+		</form> 
+	</script>
+<div id="menu">
+		<a href="#login">Login</a>
+		<a href="#signup">Signup</a>
+	</div>
+	<script>
+
+		var NomNomRouter = Backbone.Router.extend({
+
+		  routes: {
+			"login":  "login",   
+			"signup": "signup"
+		  },
+
+		  login: function() {
+		   var LoginTemplate = _.template($("#LoginTemplate").html());
+			var loginScreen = LoginTemplate();
+			$("#screen").html(loginScreen);
+
+		  },
+
+		  signup: function() {
+		  var SignUpTemplate = _.template($("#Signup").html());
+			var signUpScreen = SignUpTemplate();
+			$("#screen").html(signUpScreen);
+		  
+		  }
+
+		});
+		var nomNomRouter=new NomNomRouter();
+		 Backbone.history.start();
+		 //nomNomRouter.navigate("login");
+		
+		function onSubmitLoginForm() {
+		    console.log("button has been clicked");
+			var usernameInput=document.getElementByID("username").value;
+			var passInput=document.getElementByID("password").value;
+			Parse.User.logIn(usernameInput,passInput, {
+			  success: function(user) {
+				alert("you have been logged in");
+				console.log("you have been logged in");
+			  },
+			  error: function(user, error) {
+				alert("Error: " + error.code + " " + error.message);
+			  }
+			});
+		}
+		
+		function onSubmitSignupForm() {
+			var firstnameInput=document.getElementByID("firstname").value;
+			var surnameInput=document.getElementByID("surname").value;
+			var usernameInputSignup=document.getElementByID("usernameSignup").value;
+			var passwordInputSignup=document.getElementByID("passwordSignup").value;
+			var emailInput=document.getElementByID("email").value;
+			var verifyEmailInput=document.getElementByID("verifyEmail").value;
+			var emailVerified;
+				if(emailInput===verifyEmailinput)
+				{
+				emailVerified=true;
+				}
+				else
+				{alert("Your emails dont match");}
+			var newUser=new Parse.User();
+			newUser.set("realName",firstNameInput);
+			newUser.set("realSurname",surnameInput);
+			newUser.set("username",usernameInputSignup);
+			newUser.set("password",passwordInputSignup);
+			newUser.set("email",email);
+			newUser.set("emailVerified",emailVerified);
+			
+			newUser.signUp(null, {
+			  success: function(user) {
+				// Do stuff after successful signup.
+				alert("New user added");
+			  },
+			  error: function(user, error) {
+				// The login failed. Check error to see why.
+			  }
+			});
+		}
+	</script>
+
+</body>
+</html>
